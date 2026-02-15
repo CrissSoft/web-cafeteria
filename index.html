@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Café Andino - Menú</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <h1 class="logo">CAFETERIA Y&V</h1>
+            <nav class="header-nav">
+                <button class="icon-btn" type="button" data-testid="cart-btn" aria-label="Carrito de compras">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                    <span class="badge" data-testid="cart-badge">0</span>
+                </button>
+                <button class="icon-btn" type="button" data-testid="report-btn" aria-label="Dashboard">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M18 17V9"></path>
+                        <path d="M13 17V5"></path>
+                        <path d="M8 17v-3"></path>
+                    </svg>
+                </button>
+                <button class="icon-btn" type="button" data-testid="support-btn" aria-label="Soporte">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h2 class="section-title">Nuestro Menú</h2>
+            <div class="products-grid">
+                <!-- Product Card 1: Tinto -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=400&h=300&fit=crop" alt="Tinto">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Tinto</h3>
+                        <p class="product-price">$2.000</p>
+                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                    </div>
+                </div>
+
+                <!-- Product Card 2: Capuccino -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop" alt="Capuccino">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Capuccino</h3>
+                        <p class="product-price">$6.000</p>
+                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                    </div>
+                </div>
+
+                <!-- Product Card 3: Latte -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop" alt="Latte">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Latte</h3>
+                        <p class="product-price">$5.500</p>
+                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                    </div>
+                </div>
+
+                <!-- Product Card 4: Pan de bono -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop" alt="Pan de bono">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Pan integral </h3>
+                        <p class="product-price">$3.000</p>
+                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                    </div>
+                </div>
+
+                <!-- Product Card 5: Croissant -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop" alt="Croissant">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Croissant</h3>
+                        <p class="product-price">$4.500</p>
+                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                    </div>
+                </div>
+
+                <!-- Product Card 6: Deditos de queso -->
+                <div class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop" alt="Deditos de queso">
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">brownie </h3>
+                        <p class="product-price">$3.500</p>
+                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Panel del carrito (para JS y Selenium) -->
+    <div class="cart-panel" data-testid="cart-panel" aria-hidden="true">
+        <div class="cart-panel-header">
+            <h3>Tu carrito</h3>
+            <button type="button" class="cart-panel-close" data-testid="cart-panel-close" aria-label="Cerrar">&times;</button>
+        </div>
+        <ul class="cart-list" data-testid="cart-list"></ul>
+        <div class="cart-panel-footer">
+            <strong>Total: <span data-testid="cart-total">$0</span></strong>
+        </div>
+    </div>
+
+    <!-- Modal Dashboard -->
+    <div class="modal-overlay" data-testid="modal-overlay" aria-hidden="true">
+        <div class="modal-box modal-box--dashboard">
+            <div class="modal-header">
+                <h3>Dashboard</h3>
+                <button type="button" data-testid="modal-close" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body" data-testid="report-content"></div>
+        </div>
+    </div>
+
+    <!-- Modal Soporte -->
+    <div class="modal-overlay" data-testid="support-modal" aria-hidden="true">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Soporte</h3>
+                <button type="button" data-testid="modal-close" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Contacto: <a href="mailto:soporte@cafeteria.com">soporte@cafeteria.com</a></p>
+                <p>Horario: Lunes a Viernes 7:00 AM - 6:00 PM</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dato del carrito en JSON para Selenium (oculto) -->
+    <pre id="cart-data-export" data-testid="cart-data-export" style="display:none;" aria-hidden="true">{}</pre>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+
