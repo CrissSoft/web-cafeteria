@@ -444,7 +444,6 @@ body {
 }
 .modal-body { padding: 1.25rem; }
 .modal-box--dashboard { max-width: 560px; }
-
 /* Dashboard */
 .dashboard { display: flex; flex-direction: column; gap: 1.5rem; }
 .dashboard-cards {
@@ -499,6 +498,209 @@ body {
 .dashboard-empty { color: var(--text-light); margin: 0; font-size: 0.9rem; }
 @media (max-width: 480px) {
     .dashboard-cards { grid-template-columns: 1fr; }
+}
+
+/* ===========================
+   Panel Admin (moderno)
+   =========================== */
+
+.admin-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.admin-panel-columns {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 1.4fr;
+    gap: 1.5rem;
+}
+
+.admin-section {
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    padding: 1.25rem;
+    border: 1px solid rgba(139, 69, 19, 0.08);
+    box-shadow: var(--shadow-sm);
+}
+
+.admin-section h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.admin-section h4::before {
+    content: "";
+    width: 6px;
+    height: 18px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+}
+
+.inline-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.inline-form input {
+    flex: 1;
+}
+
+.stacked-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.form-group label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="url"],
+select {
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9375rem;
+    outline: none;
+    transition: var(--transition);
+    background-color: var(--bg-white);
+}
+
+input:focus,
+select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 1px rgba(139, 69, 19, 0.15);
+}
+
+.primary-btn,
+.secondary-btn,
+.danger-btn {
+    border-radius: 999px;
+    padding: 0.55rem 1.1rem;
+    border: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    transition: var(--transition);
+}
+
+.primary-btn {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    box-shadow: 0 6px 16px rgba(139, 69, 19, 0.35);
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 20px rgba(139, 69, 19, 0.45);
+}
+
+.secondary-btn {
+    background: #fff7f1;
+    color: var(--primary-color);
+    border: 1px solid rgba(139, 69, 19, 0.2);
+}
+
+.secondary-btn:hover {
+    background: #ffe9d3;
+}
+
+.danger-btn {
+    background: #ffe5e5;
+    color: #c0392b;
+    border: 1px solid rgba(192, 57, 43, 0.25);
+}
+
+.danger-btn:hover {
+    background: #ffd1d1;
+}
+
+.small {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.78rem;
+}
+
+.admin-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.admin-list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.admin-table-wrapper {
+    max-height: 260px;
+    overflow: auto;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.admin-table-wrapper table {
+    font-size: 0.85rem;
+}
+
+.admin-table-wrapper td.actions {
+    white-space: nowrap;
+}
+
+.form-helper {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.35rem;
+}
+
+.form-helper.info {
+    color: #2980b9;
+}
+
+.form-helper.success {
+    color: #27ae60;
+}
+
+.form-helper.error {
+    color: #c0392b;
+}
+
+@media (max-width: 768px) {
+    .admin-panel-columns {
+        grid-template-columns: 1fr;
+    }
 }
 
 

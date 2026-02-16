@@ -9,6 +9,12 @@
   let cart = [];
   const CART_STORAGE_KEY = 'cafeteria_yv_cart';
 
+  // --- Estado del menú y categorías (para admin) ---
+  let menuData = [];
+  let categories = [];
+  const MENU_STORAGE_KEY = 'cafeteria_yv_menu';
+  const CATEGORY_STORAGE_KEY = 'cafeteria_yv_categories';
+
   // --- Elementos del DOM (con data-testid para Selenium) ---
   const selectors = {
     cartBadge: '[data-testid="cart-badge"]',
@@ -173,6 +179,369 @@
     renderCartUI();
   }
 
+  // ========================
+  // MENÚ / ADMIN
+  // ========================
+
+  function loadMenuFromStorageOrDom() {
+    try {
+      const savedMenu = localStorage.getItem(MENU_STORAGE_KEY);
+      const savedCats = localStorage.getItem(CATEGORY_STORAGE_KEY);
+      if (savedMenu) {
+        menuData = JSON.parse(savedMenu);
+      } else {
+        // Construir menú inicial desde las tarjetas existentes en el DOM
+        const cards = document.querySelectorAll('.products-grid .product-card');
+        menuData = Array.from(cards).map((card, index) => {
+          const nameEl = card.querySelector('.product-name');
+          const priceEl = card.querySelector('.product-price');
+          const imgEl = card.querySelector('img');
+          return {
+            id: index + 1,
+            name: nameEl ? nameEl.textContent.trim() : 'Producto',
+            price: parsePrice(priceEl ? priceEl.textContent.trim() : ''),
+            category: 'General',
+            imageUrl: imgEl ? imgEl.src : '',
+          };
+        });
+      }
+      if (savedCats) {
+        categories = JSON.parse(savedCats);
+      } else {
+        categories = ['General'];
+      }
+    } catch (e) {
+      menuData = [];
+      categories = ['General'];
+    }
+    saveMenuState();
+    renderMenuGrid();
+  }
+
+  function saveMenuState() {
+    try {
+      localStorage.setItem(MENU_STORAGE_KEY, JSON.stringify(menuData));
+      localStorage.setItem(CATEGORY_STORAGE_KEY, JSON.stringify(categories));
+    } catch (e) {}
+  }
+
+  function renderMenuGrid() {
+    const grid = document.querySelector('.products-grid');
+    if (!grid) return;
+
+    grid.innerHTML = menuData
+      .map(
+        (item) => `
+        <div class="product-card" data-product-id="${item.id}">
+          <div class="product-image">
+            <img src="${escapeHtml(item.imageUrl || 'https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=400&h=300&fit=crop')}" alt="${escapeHtml(item.name)}">
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">${escapeHtml(item.name)}</h3>
+            <p class="product-price">$${formatNumber(item.price || 0)}</p>
+            <button class="add-to-cart-btn" data-testid="add-to-cart-btn">Agregar al carrito</button>
+          </div>
+        </div>
+      `
+      )
+      .join('');
+
+    // Reasignar eventos de carrito después de re-renderizar
+    attachAddToCartHandlers();
+  }
+
+  function attachAddToCartHandlers() {
+    document.querySelectorAll('.add-to-cart-btn').forEach((btn) => {
+      btn.setAttribute('data-testid', 'add-to-cart-btn');
+      const card = btn.closest('.product-card');
+      if (!card) return;
+      const nameEl = card.querySelector('.product-name');
+      const priceEl = card.querySelector('.product-price');
+      if (nameEl && priceEl) {
+        btn.onclick = () => addToCart(nameEl.textContent.trim(), priceEl.textContent.trim());
+      }
+    });
+  }
+
+  function renderAdminCategories() {
+    const list = document.getElementById('admin-category-list');
+    const select = document.getElementById('admin-product-category');
+    if (!list || !select) return;
+
+    list.innerHTML = categories
+      .map(
+        (cat, index) => `
+        <li class="admin-list-item">
+          <span>${escapeHtml(cat)}</span>
+          ${index === 0 ? '<span class="badge">Por defecto</span>' : ''}
+          ${index > 0 ? `<button type="button" data-cat-index="${index}" class="danger-btn small">Eliminar</button>` : ''}
+        </li>
+      `
+      )
+      .join('');
+
+    select.innerHTML = categories
+      .map((cat) => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`)
+      .join('');
+
+    list.querySelectorAll('button[data-cat-index]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const i = parseInt(btn.getAttribute('data-cat-index'), 10);
+        const removed = categories[i];
+        categories.splice(i, 1);
+        // Reasignar productos de esa categoría a la primera
+        const fallback = categories[0] || 'General';
+        menuData = menuData.map((p) =>
+          p.category === removed
+            ? { ...p, category: fallback }
+            : p
+        );
+        saveMenuState();
+        renderAdminCategories();
+        renderAdminProducts();
+        renderMenuGrid();
+      });
+    });
+  }
+
+  function renderAdminProducts() {
+    const wrapper = document.getElementById('admin-product-list');
+    if (!wrapper) return;
+    if (!menuData.length) {
+      wrapper.innerHTML = '<p class="dashboard-empty">No hay productos registrados.</p>';
+      return;
+    }
+
+    wrapper.innerHTML = `
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Precio</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${menuData
+            .map(
+              (p) => `
+            <tr data-product-id="${p.id}">
+              <td>${escapeHtml(p.name)}</td>
+              <td>${escapeHtml(p.category || '')}</td>
+              <td>$${formatNumber(p.price || 0)}</td>
+              <td class="actions">
+                <button type="button" class="secondary-btn small" data-action="edit">Editar</button>
+                <button type="button" class="danger-btn small" data-action="delete">Eliminar</button>
+              </td>
+            </tr>
+          `
+            )
+            .join('')}
+        </tbody>
+      </table>
+    `;
+
+    wrapper.querySelectorAll('button[data-action]').forEach((btn) => {
+      const tr = btn.closest('tr');
+      const id = tr ? parseInt(tr.getAttribute('data-product-id'), 10) : null;
+      if (!id) return;
+      const action = btn.getAttribute('data-action');
+      if (action === 'edit') {
+        btn.addEventListener('click', () => fillProductForm(id));
+      } else if (action === 'delete') {
+        btn.addEventListener('click', () => deleteProduct(id));
+      }
+    });
+  }
+
+  function fillProductForm(id) {
+    const product = menuData.find((p) => p.id === id);
+    if (!product) return;
+    const idInput = document.getElementById('admin-product-id');
+    const nameInput = document.getElementById('admin-product-name');
+    const priceInput = document.getElementById('admin-product-price');
+    const catSelect = document.getElementById('admin-product-category');
+    const imageInput = document.getElementById('admin-product-image');
+    if (!idInput || !nameInput || !priceInput || !catSelect || !imageInput) return;
+
+    idInput.value = String(product.id);
+    nameInput.value = product.name;
+    priceInput.value = product.price || 0;
+    catSelect.value = product.category || categories[0] || 'General';
+    imageInput.value = product.imageUrl || '';
+  }
+
+  function deleteProduct(id) {
+    menuData = menuData.filter((p) => p.id !== id);
+    saveMenuState();
+    renderAdminProducts();
+    renderMenuGrid();
+  }
+
+  function setupAdminForms() {
+    const categoryForm = document.getElementById('admin-category-form');
+    const categoryName = document.getElementById('admin-category-name');
+    const productForm = document.getElementById('admin-product-form');
+
+    if (categoryForm && categoryName) {
+      categoryForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const value = categoryName.value.trim();
+        if (!value) return;
+        if (!categories.includes(value)) {
+          categories.push(value);
+          saveMenuState();
+          renderAdminCategories();
+        }
+        categoryName.value = '';
+      });
+    }
+
+    if (productForm) {
+      productForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const idInput = document.getElementById('admin-product-id');
+        const nameInput = document.getElementById('admin-product-name');
+        const priceInput = document.getElementById('admin-product-price');
+        const catSelect = document.getElementById('admin-product-category');
+        const imageInput = document.getElementById('admin-product-image');
+        if (!nameInput || !priceInput || !catSelect || !imageInput || !idInput) return;
+
+        const name = nameInput.value.trim();
+        const price = parseInt(priceInput.value, 10) || 0;
+        const category = catSelect.value;
+        const imageUrl = imageInput.value.trim();
+
+        if (!name || !price) return;
+
+        const idValue = idInput.value ? parseInt(idInput.value, 10) : null;
+        if (idValue) {
+          // Editar
+          menuData = menuData.map((p) =>
+            p.id === idValue
+              ? { ...p, name, price, category, imageUrl }
+              : p
+          );
+        } else {
+          // Nuevo
+          const newId = menuData.length ? Math.max(...menuData.map((p) => p.id)) + 1 : 1;
+          menuData.push({ id: newId, name, price, category, imageUrl });
+        }
+
+        idInput.value = '';
+        nameInput.value = '';
+        priceInput.value = '';
+        imageInput.value = '';
+
+        saveMenuState();
+        renderAdminProducts();
+        renderMenuGrid();
+      });
+    }
+  }
+
+  // ========================
+  // ADMIN AUTH
+  // ========================
+
+  function openModal(selector) {
+    const overlay = document.querySelector(selector);
+    if (overlay) overlay.classList.add('modal--open');
+  }
+
+  function openAdminPanel() {
+    const overlay = document.querySelector('[data-testid="admin-panel-modal"]');
+    if (overlay) overlay.classList.add('modal--open');
+    renderAdminCategories();
+    renderAdminProducts();
+  }
+
+  function initAdminAuth() {
+    const adminBtn = document.querySelector('[data-testid="admin-btn"]');
+    const loginModalSelector = '[data-testid="admin-login-modal"]';
+    const loginForm = document.getElementById('admin-login-form');
+    const loginMsg = document.getElementById('admin-login-message');
+    const logoutBtn = document.querySelector('[data-testid="admin-logout-btn"]');
+
+    const cfg = (window.CafeteriaConfig || null);
+
+    function showMessage(text, type) {
+      if (!loginMsg) return;
+      loginMsg.textContent = text;
+      loginMsg.className = 'form-helper ' + (type || '');
+    }
+
+    async function requireAdminSession() {
+      if (!cfg || !cfg.getCurrentUser || !cfg.isCurrentUserAdmin) {
+        // Modo demo sin Supabase: abre directo el panel
+        openAdminPanel();
+        return;
+      }
+      const isAdmin = await cfg.isCurrentUserAdmin();
+      if (isAdmin) {
+        openAdminPanel();
+      } else {
+        openModal(loginModalSelector);
+      }
+    }
+
+    if (adminBtn) {
+      adminBtn.addEventListener('click', () => {
+        requireAdminSession();
+      });
+    }
+
+    if (loginForm) {
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const emailInput = document.getElementById('admin-email');
+        const passInput = document.getElementById('admin-password');
+        if (!emailInput || !passInput) return;
+
+        const email = emailInput.value.trim();
+        const password = passInput.value;
+
+        if (!cfg || !cfg.signInAdmin) {
+          // Sin Supabase, aceptamos cualquier credencial en modo local
+          showMessage('Modo local sin Supabase: acceso concedido.', 'success');
+          setTimeout(() => {
+            closeModals();
+            openAdminPanel();
+          }, 500);
+          return;
+        }
+
+        showMessage('Verificando credenciales...', 'info');
+        try {
+          const { user, error } = await cfg.signInAdmin({ email, password });
+          if (error || !user) {
+            showMessage(error ? error.message : 'Credenciales inválidas', 'error');
+            return;
+          }
+          showMessage('Bienvenido, ' + (user.email || 'admin'), 'success');
+          setTimeout(() => {
+            closeModals();
+            openAdminPanel();
+          }, 500);
+        } catch (err) {
+          showMessage('Error al iniciar sesión', 'error');
+        }
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        if (cfg && cfg.signOut) {
+          try {
+            await cfg.signOut();
+          } catch (e) {}
+        }
+        closeModals();
+      });
+    }
+  }
+
   function toggleCartPanel() {
     const panel = document.querySelector(selectors.cartPanel);
     if (!panel) return;
@@ -180,7 +549,7 @@
   }
 
   function closeModals() {
-    document.querySelectorAll(selectors.modalOverlay).forEach((el) => el.classList.remove('modal--open'));
+    document.querySelectorAll('.modal-overlay').forEach((el) => el.classList.remove('modal--open'));
   }
 
   function openReport() {
@@ -250,7 +619,6 @@
     const cartBtn = document.querySelector(selectors.cartBtn);
     const reportBtn = document.querySelector(selectors.reportBtn);
     const supportBtn = document.querySelector(selectors.supportBtn);
-    const panel = document.querySelector(selectors.cartPanel);
 
     if (cartBtn) cartBtn.addEventListener('click', toggleCartPanel);
     const cartPanelClose = document.querySelector('[data-testid="cart-panel-close"]');
@@ -258,18 +626,7 @@
     if (reportBtn) reportBtn.addEventListener('click', openReport);
     if (supportBtn) supportBtn.addEventListener('click', openSupport);
 
-    document.querySelectorAll('.add-to-cart-btn').forEach((btn) => {
-      btn.setAttribute('data-testid', 'add-to-cart-btn');
-      const card = btn.closest('.product-card');
-      if (!card) return;
-      const nameEl = card.querySelector('.product-name');
-      const priceEl = card.querySelector('.product-price');
-      if (nameEl && priceEl) {
-        btn.addEventListener('click', () => addToCart(nameEl.textContent.trim(), priceEl.textContent.trim()));
-      }
-    });
-
-    document.querySelectorAll(selectors.modalOverlay).forEach((overlay) => {
+    document.querySelectorAll('.modal-overlay').forEach((overlay) => {
       overlay.addEventListener('click', (e) => {
         if (e.target === overlay) closeModals();
       });
@@ -278,7 +635,13 @@
       btn.addEventListener('click', closeModals);
     });
 
+    // Inicializar carrito y menú
     loadCart();
+    loadMenuFromStorageOrDom();
+
+    // Inicializar admin (auth + formularios)
+    setupAdminForms();
+    initAdminAuth();
   }
 
   if (document.readyState === 'loading') {

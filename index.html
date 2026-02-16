@@ -33,6 +33,12 @@
                         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
                     </svg>
                 </button>
+                <button class="icon-btn" type="button" data-testid="admin-btn" aria-label="Panel administrador">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="7" r="4"></circle>
+                        <path d="M5.5 21a6.5 6.5 0 0 1 13 0"></path>
+                    </svg>
+                </button>
             </nav>
         </div>
     </header>
@@ -154,10 +160,88 @@
         </div>
     </div>
 
+    <!-- Modal Login Admin -->
+    <div class="modal-overlay" data-testid="admin-login-modal" aria-hidden="true">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Acceso administrador</h3>
+                <button type="button" data-testid="modal-close" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="admin-login-form">
+                    <div class="form-group">
+                        <label for="admin-email">Correo</label>
+                        <input type="email" id="admin-email" required placeholder="admin@cafeteria.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="admin-password">Contraseña</label>
+                        <input type="password" id="admin-password" required placeholder="********">
+                    </div>
+                    <p class="form-helper" id="admin-login-message"></p>
+                    <button type="submit" class="primary-btn">Entrar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Panel Admin -->
+    <div class="modal-overlay" data-testid="admin-panel-modal" aria-hidden="true">
+        <div class="modal-box modal-box--dashboard">
+            <div class="modal-header">
+                <h3>Panel administrador</h3>
+                <button type="button" data-testid="admin-logout-btn" class="secondary-btn small">Cerrar sesión</button>
+                <button type="button" data-testid="modal-close" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="admin-panel">
+                    <div class="admin-panel-columns">
+                        <section class="admin-section">
+                            <h4>Categorías</h4>
+                            <form id="admin-category-form" class="inline-form">
+                                <input type="text" id="admin-category-name" placeholder="Nueva categoría" required>
+                                <button type="submit" class="primary-btn small">Agregar</button>
+                            </form>
+                            <ul id="admin-category-list" class="admin-list"></ul>
+                        </section>
+                        <section class="admin-section">
+                            <h4>Productos</h4>
+                            <form id="admin-product-form" class="stacked-form">
+                                <input type="hidden" id="admin-product-id">
+                                <div class="form-group">
+                                    <label for="admin-product-name">Nombre</label>
+                                    <input type="text" id="admin-product-name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-product-price">Precio (COP)</label>
+                                    <input type="number" id="admin-product-price" min="0" step="100" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-product-category">Categoría</label>
+                                    <select id="admin-product-category" required></select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="admin-product-image">URL de imagen</label>
+                                    <input type="url" id="admin-product-image" placeholder="https://...">
+                                </div>
+                                <button type="submit" class="primary-btn">Guardar producto</button>
+                            </form>
+                            <div id="admin-product-list" class="admin-table-wrapper"></div>
+                        </section>
+                    </div>
+                    <p class="form-helper">
+                        Nota: Actualmente los cambios se guardan en este navegador (localStorage).
+                        Para producción, conecta estos formularios con tus tablas en Supabase.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Dato del carrito en JSON para Selenium (oculto) -->
     <pre id="cart-data-export" data-testid="cart-data-export" style="display:none;" aria-hidden="true">{}</pre>
 
-    <script src="app.js"></script>
+    <script type="module" src="config.js"></script>
+    <script type="module" src="app.js"></script>
 </body>
 </html>
 
