@@ -12,6 +12,11 @@
         <div class="header-container">
             <h1 class="logo">CAFETERIA Y&V</h1>
             <nav class="header-nav">
+                <div class="header-links">
+                    <button type="button" class="header-link">Productos</button>
+                    <button type="button" class="header-link">Bebidas</button>
+                    <button type="button" class="header-link">Reserva</button>
+                </div>
                 <button class="icon-btn" type="button" data-testid="cart-btn" aria-label="Carrito de compras">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
@@ -19,14 +24,6 @@
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                     </svg>
                     <span class="badge" data-testid="cart-badge">0</span>
-                </button>
-                <button class="icon-btn" type="button" data-testid="report-btn" aria-label="Dashboard">
-                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M3 3v18h18"></path>
-                        <path d="M18 17V9"></path>
-                        <path d="M13 17V5"></path>
-                        <path d="M8 17v-3"></path>
-                    </svg>
                 </button>
                 <button class="icon-btn" type="button" data-testid="support-btn" aria-label="Soporte">
                     <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -42,6 +39,9 @@
             </nav>
         </div>
     </header>
+
+    <!-- Banner dinámico de categoría -->
+    <div id="category-banner" class="category-banner" aria-hidden="true"></div>
 
     <!-- Main Content -->
     <main class="main-content">
@@ -135,17 +135,6 @@
         </div>
     </div>
 
-    <!-- Modal Dashboard -->
-    <div class="modal-overlay" data-testid="modal-overlay" aria-hidden="true">
-        <div class="modal-box modal-box--dashboard">
-            <div class="modal-header">
-                <h3>Dashboard</h3>
-                <button type="button" data-testid="modal-close" aria-label="Cerrar">&times;</button>
-            </div>
-            <div class="modal-body" data-testid="report-content"></div>
-        </div>
-    </div>
-
     <!-- Modal Soporte -->
     <div class="modal-overlay" data-testid="support-modal" aria-hidden="true">
         <div class="modal-box">
@@ -194,6 +183,7 @@
             </div>
             <div class="modal-body">
                 <div class="admin-panel">
+                    <section class="admin-section" id="admin-dashboard"></section>
                     <div class="admin-panel-columns">
                         <section class="admin-section">
                             <h4>Categorías</h4>
@@ -239,6 +229,34 @@
 
     <!-- Dato del carrito en JSON para Selenium (oculto) -->
     <pre id="cart-data-export" data-testid="cart-data-export" style="display:none;" aria-hidden="true">{}</pre>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <h3>Cafetería Y&V</h3>
+                <p>Sabores locales con el mejor café.</p>
+            </div>
+            <div class="footer-contact">
+                <div>
+                    <span class="footer-label">Correo</span>
+                    <a href="mailto:cafeteria@gmail.com">cafeteria@gmail.com</a>
+                </div>
+                <div>
+                    <span class="footer-label">Teléfono</span>
+                    <a href="tel:+573207191032">320 719 1032</a>
+                </div>
+                <div>
+                    <span class="footer-label">Pedidos</span>
+                    <a href="tel:+573043410802">304 341 0802</a>
+                </div>
+            </div>
+            <div class="footer-location">
+                <span class="footer-label">Ubicación</span>
+                <p>Astrea, Cesar - Colombia</p>
+            </div>
+        </div>
+    </footer>
 
     <script type="module" src="config.js"></script>
     <script type="module" src="app.js"></script>

@@ -19,14 +19,11 @@
   const selectors = {
     cartBadge: '[data-testid="cart-badge"]',
     cartBtn: '[data-testid="cart-btn"]',
-    reportBtn: '[data-testid="report-btn"]',
     supportBtn: '[data-testid="support-btn"]',
     cartPanel: '[data-testid="cart-panel"]',
     cartList: '[data-testid="cart-list"]',
     cartTotal: '[data-testid="cart-total"]',
     cartDataExport: '#cart-data-export',
-    dashboardContent: '[data-testid="report-content"]',
-    modalOverlay: '[data-testid="modal-overlay"]',
   };
 
   // Cargar carrito desde localStorage al iniciar
@@ -453,6 +450,7 @@
   function openAdminPanel() {
     const overlay = document.querySelector('[data-testid="admin-panel-modal"]');
     if (overlay) overlay.classList.add('modal--open');
+    renderAdminDashboard();
     renderAdminCategories();
     renderAdminProducts();
   }
@@ -552,16 +550,29 @@
     document.querySelectorAll('.modal-overlay').forEach((el) => el.classList.remove('modal--open'));
   }
 
-  function openReport() {
-    const overlay = document.querySelector(selectors.modalOverlay);
-    const content = document.querySelector(selectors.dashboardContent);
-    if (!overlay || !content) return;
+  function openSupport() {
+    const overlay = document.querySelector('[data-testid="support-modal"]');
+    if (overlay) overlay.classList.add('modal--open');
+  }
+
+  // ========================
+  // DASHBOARD EN PANEL ADMIN
+  // ========================
+
+  function renderAdminDashboard() {
+    const container = document.getElementById('admin-dashboard');
+    if (!container) return;
 
     const data = getCartForExport();
     const menuJson = window.getMenuDataForAutomation ? window.getMenuDataForAutomation() : '[]';
-    const menu = JSON.parse(menuJson);
+    let menu = [];
+    try {
+      menu = JSON.parse(menuJson);
+    } catch (e) {
+      menu = [];
+    }
 
-    content.innerHTML = `
+    container.innerHTML = `
       <div class="dashboard">
         <div class="dashboard-cards">
           <div class="dashboard-card">
@@ -570,7 +581,7 @@
           </div>
           <div class="dashboard-card">
             <span class="dashboard-card-value">$${formatNumber(data.total)}</span>
-            <span class="dashboard-card-label">Total</span>
+            <span class="dashboard-card-label">Total carrito actual</span>
           </div>
           <div class="dashboard-card">
             <span class="dashboard-card-value">${menu.length}</span>
@@ -578,7 +589,7 @@
           </div>
         </div>
         <div class="dashboard-section">
-          <h4 class="dashboard-title">Tu carrito</h4>
+          <h4 class="dashboard-title">Resumen de carrito</h4>
           ${data.items.length ? `
             <table class="dashboard-table">
               <thead>
@@ -607,23 +618,84 @@
         </div>
       </div>
     `;
-    overlay.classList.add('modal--open');
   }
 
-  function openSupport() {
-    const overlay = document.querySelector('[data-testid="support-modal"]');
-    if (overlay) overlay.classList.add('modal--open');
+  // ========================
+  // HEADER LINKS / BANNER
+  // ========================
+
+  function updateCategoryBanner(kind) {
+    const banner = document.getElementById('category-banner');
+    if (!banner) return;
+
+    if (!menuData || !menuData.length) {
+      banner.classList.remove('category-banner--visible');
+      banner.innerHTML = '';
+      return;
+    }
+
+    const normalized = (kind || '').toLowerCase();
+    let items = [];
+
+    if (normalized === 'productos') {
+      items = menuData.slice();
+    } else if (normalized === 'bebidas') {
+      const drinkRegex = /tinto|capp?uccino|latte|café|cafe|mocha|espresso/i;
+      items = menuData.filter((p) => {
+        const name = p.name || '';
+        const cat = p.category || '';
+        return drinkRegex.test(name) || cat.toLowerCase().includes('bebida');
+      });
+    } else if (normalized === 'reserva') {
+      items = menuData.slice();
+    } else {
+      items = menuData.slice();
+    }
+
+    const visibleItems = items.slice(0, 10);
+    const chipsHtml = visibleItems
+      .map(
+        (p) =>
+          `<span class="banner-chip">${escapeHtml(p.name)} <span class="banner-chip-price">$${formatNumber(
+            p.price || 0
+          )}</span></span>`
+      )
+      .join('');
+
+    let helper = '';
+    if (normalized === 'reserva') {
+      helper =
+        '<span class="banner-helper">Reserva o haz tu pedido al 304 341 0802</span>';
+    }
+
+    banner.innerHTML = `
+      <div class="banner-content">
+        <span class="banner-label">${escapeHtml(
+          kind
+        )} disponibles:</span>
+        ${chipsHtml || '<span class="banner-empty">Sin productos registrados.</span>'}
+        ${helper}
+        <button type="button" class="banner-close" aria-label="Ocultar banner">&times;</button>
+      </div>
+    `;
+    banner.classList.add('category-banner--visible');
+
+    const closeBtn = banner.querySelector('.banner-close');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        banner.classList.remove('category-banner--visible');
+        banner.innerHTML = '';
+      });
+    }
   }
 
   function init() {
     const cartBtn = document.querySelector(selectors.cartBtn);
-    const reportBtn = document.querySelector(selectors.reportBtn);
     const supportBtn = document.querySelector(selectors.supportBtn);
 
     if (cartBtn) cartBtn.addEventListener('click', toggleCartPanel);
     const cartPanelClose = document.querySelector('[data-testid="cart-panel-close"]');
     if (cartPanelClose) cartPanelClose.addEventListener('click', toggleCartPanel);
-    if (reportBtn) reportBtn.addEventListener('click', openReport);
     if (supportBtn) supportBtn.addEventListener('click', openSupport);
 
     document.querySelectorAll('.modal-overlay').forEach((overlay) => {
@@ -642,6 +714,14 @@
     // Inicializar admin (auth + formularios)
     setupAdminForms();
     initAdminAuth();
+
+    // Header links -> banner dinámico
+    document.querySelectorAll('.header-link').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const label = btn.textContent.trim();
+        updateCategoryBanner(label);
+      });
+    });
   }
 
   if (document.readyState === 'loading') {
