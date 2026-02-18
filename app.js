@@ -20,7 +20,7 @@
     cartBadge: '[data-testid="cart-badge"]',
     cartBtn: '[data-testid="cart-btn"]',
     supportBtn: '[data-testid="support-btn"]',
-    cartPanel: '[data-testid="cart-panel"]',
+    cartModal: '[data-testid="cart-modal"]',
     cartList: '[data-testid="cart-list"]',
     cartTotal: '[data-testid="cart-total"]',
     cartDataExport: '#cart-data-export',
@@ -174,6 +174,35 @@
   function removeFromCart(index) {
     cart.splice(index, 1);
     renderCartUI();
+  }
+
+  function clearCart() {
+    cart = [];
+    renderCartUI();
+  }
+
+  function buildWhatsAppOrderMessage() {
+    const data = getCartForExport();
+    if (!data.items.length) return '';
+
+    const lines = [];
+    lines.push('Hola, quiero hacer un pedido en Cafetería Y&V.');
+    lines.push('');
+    lines.push('Pedido:');
+    data.items.forEach((item) => {
+      lines.push(`- ${item.name} x${item.quantity} = $${formatNumber(item.subtotal)}`);
+    });
+    lines.push('');
+    lines.push(`Total: $${formatNumber(data.total)}`);
+    return lines.join('\n');
+  }
+
+  function openWhatsAppOrder() {
+    const msg = buildWhatsAppOrderMessage();
+    if (!msg) return;
+    const phone = '573043410802';
+    const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   }
 
   // ========================
@@ -541,9 +570,9 @@
   }
 
   function toggleCartPanel() {
-    const panel = document.querySelector(selectors.cartPanel);
-    if (!panel) return;
-    panel.classList.toggle('cart-panel--open');
+    const overlay = document.querySelector(selectors.cartModal);
+    if (!overlay) return;
+    overlay.classList.toggle('modal--open');
   }
 
   function closeModals() {
@@ -692,11 +721,15 @@
   function init() {
     const cartBtn = document.querySelector(selectors.cartBtn);
     const supportBtn = document.querySelector(selectors.supportBtn);
+    const whatsappOrderBtn = document.querySelector('[data-testid="whatsapp-order-btn"]');
+    const clearCartBtn = document.querySelector('[data-testid="clear-cart-btn"]');
 
     if (cartBtn) cartBtn.addEventListener('click', toggleCartPanel);
     const cartPanelClose = document.querySelector('[data-testid="cart-panel-close"]');
     if (cartPanelClose) cartPanelClose.addEventListener('click', toggleCartPanel);
     if (supportBtn) supportBtn.addEventListener('click', openSupport);
+    if (whatsappOrderBtn) whatsappOrderBtn.addEventListener('click', openWhatsAppOrder);
+    if (clearCartBtn) clearCartBtn.addEventListener('click', clearCart);
 
     document.querySelectorAll('.modal-overlay').forEach((overlay) => {
       overlay.addEventListener('click', (e) => {

@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cafetería Y&V - Menú</title>
+    <!-- Bootstrap CSS -->
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    >
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -45,93 +52,105 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="container">
-            <h2 class="section-title">Nuestro menú</h2>
+        <div class="container py-4">
+            <h2 class="section-title mb-4">Nuestro menú</h2>
             <div class="products-grid">
                 <!-- Product Card 1: Tinto -->
-                <div class="product-card">
+                <div class="product-card card border-0 shadow-sm">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=400&h=300&fit=crop" alt="Tinto">
+                        <img class="card-img-top" src="https://images.unsplash.com/photo-1517487881594-2787fef5ebf7?w=400&h=300&fit=crop" alt="Tinto">
                     </div>
-                    <div class="product-info">
+                    <div class="product-info card-body d-flex flex-column">
                         <h3 class="product-name">Tinto</h3>
                         <p class="product-price">$2.000</p>
-                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                        <button class="add-to-cart-btn btn btn-primary mt-auto w-100">Agregar al carrito</button>
                     </div>
                 </div>
 
                 <!-- Product Card 2: Capuccino -->
-                <div class="product-card">
+                <div class="product-card card border-0 shadow-sm">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop" alt="Capuccino">
+                        <img class="card-img-top" src="https://images.unsplash.com/photo-1572442388796-11668a67e53d?w=400&h=300&fit=crop" alt="Capuccino">
                     </div>
-                    <div class="product-info">
+                    <div class="product-info card-body d-flex flex-column">
                         <h3 class="product-name">Capuccino</h3>
                         <p class="product-price">$2.500</p>
-                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                        <button class="add-to-cart-btn btn btn-primary mt-auto w-100">Agregar al carrito</button>
                     </div>
                 </div>
 
                 <!-- Product Card 3: Latte -->
-                <div class="product-card">
+                <div class="product-card card border-0 shadow-sm">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop" alt="Latte">
+                        <img class="card-img-top" src="https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=400&h=300&fit=crop" alt="Latte">
                     </div>
-                    <div class="product-info">
+                    <div class="product-info card-body d-flex flex-column">
                         <h3 class="product-name">Latte</h3>
                         <p class="product-price">$2.500</p>
-                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                        <button class="add-to-cart-btn btn btn-primary mt-auto w-100">Agregar al carrito</button>
                     </div>
                 </div>
 
                 <!-- Product Card 4: Empanada de pollo -->
-                <div class="product-card">
+                <div class="product-card card border-0 shadow-sm">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop" alt="Empanada de pollo">
+                        <img class="card-img-top" src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400&h=300&fit=crop" alt="Empanada de pollo">
                     </div>
-                    <div class="product-info">
+                    <div class="product-info card-body d-flex flex-column">
                         <h3 class="product-name">Empanada de pollo</h3>
                         <p class="product-price">$2.500</p>
-                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                        <button class="add-to-cart-btn btn btn-primary mt-auto w-100">Agregar al carrito</button>
                     </div>
                 </div>
 
                 <!-- Product Card 5: Empanada de carne -->
-                <div class="product-card">
+                <div class="product-card card border-0 shadow-sm">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop" alt="Empanada de carne">
+                        <img class="card-img-top" src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=400&h=300&fit=crop" alt="Empanada de carne">
                     </div>
-                    <div class="product-info">
+                    <div class="product-info card-body d-flex flex-column">
                         <h3 class="product-name">Empanada de carne</h3>
                         <p class="product-price">$2.500</p>
-                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                        <button class="add-to-cart-btn btn btn-primary mt-auto w-100">Agregar al carrito</button>
                     </div>
                 </div>
 
                 <!-- Product Card 6: Empanada mixta -->
-                <div class="product-card">
+                <div class="product-card card border-0 shadow-sm">
                     <div class="product-image">
-                        <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop" alt="Empanada mixta">
+                        <img class="card-img-top" src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=400&h=300&fit=crop" alt="Empanada mixta">
                     </div>
-                    <div class="product-info">
+                    <div class="product-info card-body d-flex flex-column">
                         <h3 class="product-name">Empanada mixta</h3>
                         <p class="product-price">$2.500</p>
-                        <button class="add-to-cart-btn">Agregar al carrito</button>
+                        <button class="add-to-cart-btn btn btn-primary mt-auto w-100">Agregar al carrito</button>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Panel del carrito (para JS y Selenium) -->
-    <div class="cart-panel" data-testid="cart-panel" aria-hidden="true">
-        <div class="cart-panel-header">
-            <h3>Tu carrito</h3>
-            <button type="button" class="cart-panel-close" data-testid="cart-panel-close" aria-label="Cerrar">&times;</button>
-        </div>
-        <ul class="cart-list" data-testid="cart-list"></ul>
-        <div class="cart-panel-footer">
-            <strong>Total: <span data-testid="cart-total">$0</span></strong>
+    <!-- Carrito como ventana emergente centrada -->
+    <div class="modal-overlay" data-testid="cart-modal" aria-hidden="true">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Tu carrito</h3>
+                <button type="button" class="cart-panel-close" data-testid="cart-panel-close" aria-label="Cerrar">&times;</button>
+            </div>
+            <div class="modal-body">
+                <ul class="cart-list" data-testid="cart-list"></ul>
+                <div class="cart-panel-footer mt-3">
+                    <strong>Total: <span data-testid="cart-total">$0</span></strong>
+                </div>
+                <div class="d-grid gap-2 mt-3">
+                    <button type="button" class="btn btn-success" data-testid="whatsapp-order-btn">
+                        Enviar pedido por WhatsApp
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" data-testid="clear-cart-btn">
+                        Vaciar carrito
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -232,34 +251,56 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="footer-brand">
-                <h3>Cafetería Y&V</h3>
-                <p>Sabores locales con el mejor café.</p>
-            </div>
-            <div class="footer-contact">
-                <div>
-                    <span class="footer-label">Correo</span>
-                    <a href="mailto:cafeteria@gmail.com">cafeteria@gmail.com</a>
+        <div class="footer-inner container">
+            <div class="row gy-3">
+                <div class="footer-brand col-12 col-md-4">
+                    <h3>Cafetería Y&V</h3>
+                    <p>Sabores locales con el mejor café.</p>
                 </div>
-                <div>
-                    <span class="footer-label">Teléfono</span>
-                    <a href="tel:+573207191032">320 719 1032</a>
+                <div class="footer-contact col-12 col-md-4">
+                    <div>
+                        <span class="footer-label">Correo</span>
+                        <a href="mailto:cafeteria@gmail.com">cafeteria@gmail.com</a>
+                    </div>
+                    <div>
+                        <span class="footer-label">Teléfono</span>
+                        <a href="tel:+573207191032">320 719 1032</a>
+                    </div>
+                    <div>
+                        <span class="footer-label">Pedidos</span>
+                        <a href="tel:+573043410802">304 341 0802</a>
+                    </div>
                 </div>
-                <div>
-                    <span class="footer-label">Pedidos</span>
-                    <a href="tel:+573043410802">304 341 0802</a>
+                <div class="footer-location col-12 col-md-4">
+                    <span class="footer-label">Ubicación</span>
+                    <p>Astrea, Cesar - Colombia</p>
                 </div>
-            </div>
-            <div class="footer-location">
-                <span class="footer-label">Ubicación</span>
-                <p>Astrea, Cesar - Colombia</p>
             </div>
         </div>
     </footer>
 
+    <!-- Botón flotante de WhatsApp -->
+    <a
+        href="https://wa.me/573043410802"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="whatsapp-fab"
+        aria-label="Chat en WhatsApp"
+    >
+        <svg class="whatsapp-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false">
+            <path fill="currentColor" d="M19.11 17.57c-.27-.14-1.59-.79-1.84-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.14-.42-2.17-1.34-.8-.71-1.34-1.58-1.5-1.85-.16-.27-.02-.41.12-.55.13-.13.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.48-.84-2.03-.22-.53-.45-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.27s.98 2.63 1.11 2.82c.14.18 1.92 2.93 4.65 4.11.65.28 1.15.45 1.54.58.65.21 1.25.18 1.72.11.52-.08 1.59-.65 1.81-1.28.22-.63.22-1.16.16-1.28-.06-.12-.25-.2-.52-.34z"/>
+            <path fill="currentColor" d="M16.02 5.33c-5.86 0-10.62 4.76-10.62 10.62 0 1.88.49 3.71 1.42 5.32L5.33 26.67l5.56-1.46c1.55.85 3.29 1.3 5.13 1.3h.01c5.86 0 10.62-4.76 10.62-10.62S21.88 5.33 16.02 5.33zm0 19.4h-.01c-1.66 0-3.29-.45-4.72-1.3l-.34-.2-3.3.86.88-3.22-.22-.33a8.7 8.7 0 0 1-1.41-4.72c0-4.8 3.91-8.71 8.71-8.71 2.33 0 4.52.91 6.17 2.56a8.66 8.66 0 0 1 2.55 6.16c0 4.8-3.91 8.7-8.71 8.7z"/>
+        </svg>
+    </a>
+
     <script type="module" src="config.js"></script>
     <script type="module" src="app.js"></script>
+    <!-- Bootstrap JS bundle -->
+    <script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"
+    ></script>
 </body>
 </html>
 
